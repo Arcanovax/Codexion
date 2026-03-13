@@ -1,0 +1,101 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   monitoring.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/23 14:19:08 by mthetcha          #+#    #+#             */
+/*   Updated: 2026/02/26 09:24:00 by mthetcha         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "codexion.h"
+
+int all_done(t_all *all)
+{
+	int i;
+
+	i = 0;
+	while (i < all->args.nb_coders)
+	{
+		pthread_mutex_lock(&all->coders[i].mutex);
+		if (all->coders[i].nb_compile < all->args.nb_compiles)
+		{
+			pthread_mutex_unlock(&all->coders[i].mutex);
+			return (0);
+		}
+		pthread_mutex_unlock(&all->coders[i].mutex);
+		i++;
+	}
+	return (1);
+}
+
+
+int one_burn(t_all *all)
+{
+	int i;
+	long int time;
+	long int tm_burnout;
+
+	tm_burnout = all->args.tm_burnout;
+	time = get_time(all);
+	i = 0;
+
+	while (i < all->args.nb_coders)
+	{
+		pthread_mutex_lock(&all->coders[i].mutex);
+
+		if (time - all->coders[i].last_compile > tm_burnout)
+		{
+			pthread_mutex_lock(&all->printf);
+			printf("%li %i burned out\n", time, all->coders[i].id);
+			pthread_mutex_unlock(&all->printf);
+
+			pthread_mutex_unlock(&all->coders[i].mutex);
+			return (1);
+		}
+
+		pthread_mutex_unlock(&all->coders[i].mutex);
+		i++;
+	}
+	return (0);
+}
+
+void* monitoring(void* arg)
+{
+	t_all *all;
+
+	int i;
+	i = 0;
+	all = (t_all *)arg;
+	while (1)
+	{
+		pthread_mutex_lock(&all->mutex);
+		if (all_done(all))
+		{
+
+			all->active = 0;
+			pthread_mutex_unlock(&all->mutex);
+			break;
+		}
+		if (one_burn(all))
+		{
+
+			all->active = 0;
+			pthread_mutex_unlock(&all->mutex);
+			break;
+		}
+		pthread_mutex_unlock(&all->mutex);
+		usleep(1);
+	}
+	while (i < all->args.nb_coders)
+	{
+		pthread_join(all->coders[i].thread_id, NULL);
+		i++;
+	}
+	return NULL;
+
+
+}
+

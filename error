@@ -1,0 +1,13 @@
+==78977== Helgrind, a thread error detector
+==78977== Copyright (C) 2007-2017, and GNU GPL'd, by OpenWorks LLP et al.
+==78977== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==78977== Command: ./codexion 3 300000000000000000 10 10 10 2 10 fifo
+==78977== 
+==78977== 
+==78977== Use --history-level=approx or =none to gain increased speed, at
+==78977== the cost of reduced accuracy of conflicting-access information
+==78977== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 27878 from 168)
+--78977-- 
+--78977-- used_suppression:  27878 helgrind-glibc2X-005 /usr/libexec/valgrind/default.supp:947
+==78977== 
+==78977== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 27878 from 168)
