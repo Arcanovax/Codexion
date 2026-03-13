@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 15:02:07 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/13 13:19:33 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/13 16:01:19 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,12 @@ int	get_args(t_all *all, char **argv)
 	all->args.tm_refactor = atoi(argv[4]);
 	all->args.nb_compiles = atoi(argv[5]);
 	all->args.dongle_cooldown = atoi(argv[6]);
-	if (strcmp(argv[7],"fifo") == 0 )
+	if (strcmp(argv[7], "fifo") == 0)
 		all->args.scheduler = FIFO;
 	else
 		all->args.scheduler = EDF;
 	return (0);
 }
-
 
 static int	is_safe(char *str)
 {
@@ -49,37 +48,36 @@ static int	is_safe(char *str)
 			return (0);
 	}
 	if (str[i] == '\0')
-		return 1;
-	return 0;
+		return (1);
+	return (0);
 }
 
-int check_args(char **argv)
+int	check_args(char **argv)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < 7)
 	{
 		if (!is_safe(argv[i]) || atoi(argv[i]) < 1)
 		{
-			printf("Error: Argument %i is invalid", i+1);
-			return 0;
+			printf("Error: Argument %i is invalid", i + 1);
+			return (0);
 		}
 		i++;
 	}
-	if (strcmp(argv[i],"fifo") != 0 && strcmp(argv[i],"edf") != 0)
+	if (strcmp(argv[i], "fifo") != 0 && strcmp(argv[i], "edf") != 0)
 	{
-		printf("Error: Argument %i is invalid", i+1);
-		return 0;
+		printf("Error: Argument %i is invalid", i + 1);
+		return (0);
 	}
-	return 1;
+	return (1);
 }
-
 
 int	main(int argc, char **argv)
 {
-	t_all all;
-	int i;
+	t_all	all;
+	int		i;
 
 	i = 0;
 	if (argc != 9)
@@ -87,11 +85,9 @@ int	main(int argc, char **argv)
 		printf("Number of arguments invalid\n");
 		return (1);
 	}
-	if(!check_args(argv + 1))
+	if (!check_args(argv + 1))
 		return (0);
 	get_args(&all, argv + 1);
-
-
 	printf("number_of_coders %i\n", all.args.nb_coders);
 	printf("time_to_burnout %i\n", all.args.tm_burnout);
 	printf("time_to_compile %i\n", all.args.tm_compile);
@@ -99,7 +95,6 @@ int	main(int argc, char **argv)
 	printf("number_of_compiles_required %i\n", all.args.nb_compiles);
 	printf("dongle_cooldown %i\n", all.args.dongle_cooldown);
 	printf("scheduler  %u\n", all.args.scheduler);
-
 	init_dongles(&all);
 	init_queue(&all.queue);
 	init_monitor(&all);

@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 15:29:05 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/13 13:05:28 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/13 13:51:06 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,6 @@ void* threading(void* arg);
 int	init_queue(t_queue *queue);
 int	queue_append(t_queue *queue, t_coder *coder);
 int	is_first(t_queue *q, t_coder *coder);
-int	queue_pop(t_queue *queue);
 void	print_queue(t_queue *queue);
 int	has_priority(t_all *all, t_coder *coder);
 int	queue_remove(t_queue *queue, t_coder *coder);
