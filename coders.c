@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 15:47:24 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/13 09:02:46 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/16 11:12:06 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,7 @@ int do_debug(t_coder *coder)
 	pthread_mutex_lock(&coder->all->mutex);
 	if (coder->all->active)
 	{
-		pthread_mutex_lock(&coder->all->printf);
-		printf("%li %i is debugging\n",get_time(coder->all),coder->id);
-		pthread_mutex_unlock(&coder->all->printf);
+		print_msg("is debugging", coder);
 		result = 1;
 	}
 	pthread_mutex_unlock(&coder->all->mutex);
@@ -37,9 +35,7 @@ int do_refactor(t_coder *coder)
 	pthread_mutex_lock(&coder->all->mutex);
     if (coder->all->active)
     {
-		pthread_mutex_lock(&coder->all->printf);
-        printf("%li %i is refactoring\n",get_time(coder->all),coder->id);
-		pthread_mutex_unlock(&coder->all->printf);
+		print_msg("is refactoring", coder);
         result = 1;
     }
 	pthread_mutex_unlock(&coder->all->mutex);
@@ -51,9 +47,7 @@ int routine(t_coder *coder)
 {
 	take_dongles(coder);
 
-	pthread_mutex_lock(&coder->all->printf);
-	printf("%li %i is compiling\n",get_time(coder->all),coder->id);
-	pthread_mutex_unlock(&coder->all->printf);
+	print_msg("is compiling", coder);
 	pthread_mutex_lock(&coder->mutex);
 	coder->nb_compile++;
 	pthread_mutex_unlock(&coder->mutex);

@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 14:19:08 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/02/26 09:24:00 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/16 11:14:03 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,7 @@ int one_burn(t_all *all)
 
 		if (time - all->coders[i].last_compile > tm_burnout)
 		{
-			pthread_mutex_lock(&all->printf);
-			printf("%li %i burned out\n", time, all->coders[i].id);
-			pthread_mutex_unlock(&all->printf);
-
+			print_msg("burned out", &all->coders[i]);
 			pthread_mutex_unlock(&all->coders[i].mutex);
 			return (1);
 		}

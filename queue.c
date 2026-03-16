@@ -6,20 +6,11 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 14:53:40 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/13 13:51:00 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/16 10:31:21 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
-
-int	init_queue(t_queue *queue)
-{
-	queue->head = NULL;
-	queue->tail = NULL;
-	if (pthread_mutex_init(&queue->mutex, NULL))
-		return (1);
-	return (0);
-}
 
 int	queue_append(t_queue *queue, t_coder *coder)
 {
@@ -74,11 +65,10 @@ int	queue_remove(t_queue *queue, t_coder *coder)
 	return (0);
 }
 
-int	has_priority(t_all *all, t_coder *coder)
+int	check_active_coders(t_all *all, t_coder *coder)
 {
 	int		i;
 	t_coder	*other;
-	t_node	*current;
 
 	i = 0;
 	while (i < all->args.nb_coders)
@@ -97,6 +87,14 @@ int	has_priority(t_all *all, t_coder *coder)
 		pthread_mutex_unlock(&other->mutex);
 		i++;
 	}
+	return (1);
+}
+
+int	check_previous_in_queue(t_all *all, t_coder *coder)
+{
+	t_coder	*other;
+	t_node	*current;
+
 	pthread_mutex_lock(&all->queue.mutex);
 	current = all->queue.head;
 	while (current && current->coder != coder)
@@ -111,5 +109,14 @@ int	has_priority(t_all *all, t_coder *coder)
 		current = current->next;
 	}
 	pthread_mutex_unlock(&all->queue.mutex);
+	return (1);
+}
+
+int	has_priority(t_all *all, t_coder *coder)
+{
+	if (!check_active_coders(all, coder))
+		return (0);
+	if (!check_previous_in_queue(all, coder))
+		return (0);
 	return (1);
 }

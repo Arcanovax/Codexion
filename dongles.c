@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 14:02:48 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/02/26 09:38:13 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/16 11:06:35 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,10 @@
 
 int take_dongles(t_coder *coder)
 {
-
 	coder->left->is_used = 1;
-	pthread_mutex_lock(&coder->all->printf);
-	printf("%li %i has taken a dongle\n",get_time(coder->all), coder->id);
-	pthread_mutex_unlock(&coder->all->printf);
-
+	print_msg("has taken a dongle", coder);
 	coder->right->is_used = 1;
-	pthread_mutex_lock(&coder->all->printf);
-	printf("%li %i has taken a dongle\n",get_time(coder->all),coder->id);
-	pthread_mutex_unlock(&coder->all->printf);
+	print_msg("has taken a dongle", coder);
 	return (1);
 }
 int leave_dongles(t_coder *coder)
