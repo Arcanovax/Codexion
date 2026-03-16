@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 15:02:07 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/16 11:15:34 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/16 12:56:17 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,10 @@ int	check_args(char **argv)
 	return (1);
 }
 
-void print_msg(char *msg, t_coder *coder)
+void	print_msg(char *msg, t_coder *coder)
 {
 	pthread_mutex_lock(&coder->all->printf);
-	printf("%li %i %s\n",get_time(coder->all), coder->id, msg);
+	printf("%li %i %s\n", get_time(coder->all), coder->id, msg);
 	pthread_mutex_unlock(&coder->all->printf);
 }
 
@@ -105,5 +105,6 @@ int	main(int argc, char **argv)
 	init_dongles(&all);
 	init_queue(&all.queue);
 	init_monitor(&all);
+	free_all(&all);
 	return (0);
 }

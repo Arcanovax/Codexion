@@ -10,7 +10,8 @@ SRCS = \
 	dongles.c	\
 	coders.c	\
 	monitoring.c\
-	queue.c
+	queue.c		\
+	free.c
 
 OBJDIR = .obj
 

@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 14:19:08 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/16 11:14:03 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/16 12:54:51 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,14 +71,12 @@ void* monitoring(void* arg)
 		pthread_mutex_lock(&all->mutex);
 		if (all_done(all))
 		{
-
 			all->active = 0;
 			pthread_mutex_unlock(&all->mutex);
 			break;
 		}
 		if (one_burn(all))
 		{
-
 			all->active = 0;
 			pthread_mutex_unlock(&all->mutex);
 			break;
@@ -92,7 +90,5 @@ void* monitoring(void* arg)
 		i++;
 	}
 	return NULL;
-
-
 }
 

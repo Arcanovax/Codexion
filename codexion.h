@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 15:29:05 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/16 11:05:13 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/16 15:22:30 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,4 +118,5 @@ int			has_priority(t_all *all, t_coder *coder);
 int			queue_remove(t_queue *queue, t_coder *coder);
 int			init_queue(t_queue *queue);
 void		print_msg(char *msg, t_coder *coder);
+void		free_all(t_all *all);
 #endif
