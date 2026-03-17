@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 14:53:40 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/16 16:05:58 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/17 12:03:35 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,23 +68,23 @@ int	queue_remove(t_queue *queue, t_coder *coder)
 int	check_active_coders(t_all *all, t_coder *coder)
 {
 	int		i;
-	t_coder	*other;
+	t_coder	*current_coder;
 
 	i = 0;
 	while (i < all->args.nb_coders)
 	{
-		other = &all->coders[i];
-		pthread_mutex_lock(&other->mutex);
-		if (other != coder && !other->in_queue)
+		current_coder = &all->coders[i];
+		pthread_mutex_lock(&current_coder->mutex);
+		if (current_coder != coder && !current_coder->in_queue)
 		{
-			if (other->left == coder->left || other->left == coder->right
-				|| other->right == coder->left || other->right == coder->right)
+			if (current_coder->left == coder->left || current_coder->left == coder->right
+				|| current_coder->right == coder->left || current_coder->right == coder->right)
 			{
-				pthread_mutex_unlock(&other->mutex);
+				pthread_mutex_unlock(&current_coder->mutex);
 				return (0);
 			}
 		}
-		pthread_mutex_unlock(&other->mutex);
+		pthread_mutex_unlock(&current_coder->mutex);
 		i++;
 	}
 	return (1);
@@ -92,19 +92,69 @@ int	check_active_coders(t_all *all, t_coder *coder)
 
 int	check_previous_in_queue(t_all *all, t_coder *coder)
 {
-	t_coder	*other;
+	t_coder	*current_coder;
 	t_node	*current;
 
 	pthread_mutex_lock(&all->queue.mutex);
 	current = all->queue.head;
 	while (current && current->coder != coder)
 	{
-		other = current->coder;
-		if (other->left == coder->left || other->left == coder->right
-			|| other->right == coder->left || other->right == coder->right)
+		current_coder = current->coder;
+		if (current_coder->left == coder->left || current_coder->left == coder->right
+			|| current_coder->right == coder->left || current_coder->right == coder->right)
 		{
 			pthread_mutex_unlock(&all->queue.mutex);
 			return (0);
+		}
+		current = current->next;
+	}
+	pthread_mutex_unlock(&all->queue.mutex);
+	return (1);
+}
+
+int has_earlier_deadline(t_all *all,t_coder *coder, t_coder *current_coder , long now)
+{
+	long	coder_remaining;
+	long	current_remaining;
+
+	pthread_mutex_lock(&current_coder->mutex);
+
+	if (current_coder->left == coder->left
+		|| current_coder->left == coder->right
+		|| current_coder->right == coder->left
+		|| current_coder->right == coder->right)
+	{
+		coder_remaining = all->args.tm_burnout - (now - coder->last_compile);
+		current_remaining = all->args.tm_burnout - (now - current_coder->last_compile);
+		if (current_remaining < coder_remaining)
+		{
+			pthread_mutex_unlock(&current_coder->mutex);
+			return (0);
+		}
+	}
+	pthread_mutex_unlock(&current_coder->mutex);
+	return (1);
+}
+
+int	check_priority_by_deadline(t_all *all, t_coder *coder)
+{
+	t_node	*current;
+	t_coder	*current_coder;
+	long	now;
+
+	now = get_time(all);
+	pthread_mutex_lock(&all->queue.mutex);
+	current = all->queue.head;
+	while (current)
+	{
+		current_coder = current->coder;
+		if (current_coder != coder)
+		{
+			if (!has_earlier_deadline(all, coder, current_coder, now))
+			{
+				pthread_mutex_unlock(&all->queue.mutex);
+				return (0);
+			}
 		}
 		current = current->next;
 	}
@@ -116,7 +166,16 @@ int	has_priority(t_all *all, t_coder *coder)
 {
 	if (!check_active_coders(all, coder))
 		return (0);
-	if (!check_previous_in_queue(all, coder))
+	if (all->args.scheduler == FIFO && !check_previous_in_queue(all, coder))
+	{
 		return (0);
+	}
+	if (all->args.scheduler == EDF && !check_priority_by_deadline(all, coder))
+	{
+		return (0);
+	}
+
 	return (1);
 }
+
+
