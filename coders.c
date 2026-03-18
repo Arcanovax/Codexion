@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 15:47:24 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/16 15:22:06 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/18 09:02:05 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,8 @@ void	*threading(void *arg)
 			coder->in_queue = 1;
 			pthread_mutex_unlock(&coder->mutex);
 			routine(coder);
-			queue_append(&coder->all->queue, coder);
+			if (!queue_append(&coder->all->queue, coder))
+    			coder->malloc_error = 1;
 		}
 		else
 		{

@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 15:47:24 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/16 10:51:12 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/18 09:01:48 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	init_dongles(t_all *all)
 	i = 0;
 	all->dongles = malloc(sizeof(t_dongle) * all->args.nb_coders);
 	if (!all->dongles)
-		return (1);
+		return (0);
 	while (i < all->args.nb_coders)
 	{
 		pthread_mutex_init(&all->dongles[i].mutex, NULL);
@@ -28,14 +28,16 @@ int	init_dongles(t_all *all)
 		all->dongles[i].last_use = 0;
 		i++;
 	}
-	return (0);
+	return (1);
 }
 
 int	init_monitor(t_all *all)
 {
 	struct timeval	start;
 
-	init_all_coders(all);
+
+	if (!init_all_coders(all))
+		return (0);
 	pthread_mutex_lock(&all->start_mutex);
 	gettimeofday(&start, NULL);
 	all->start = (start.tv_sec * 1000L) + (start.tv_usec / 1000L);
@@ -44,7 +46,7 @@ int	init_monitor(t_all *all)
 	pthread_mutex_init(&all->monitor.mutex, NULL);
 	pthread_create(&all->monitor.thread, NULL, monitoring, all);
 	pthread_join(all->monitor.thread, NULL);
-	return (0);
+	return (1);
 }
 
 int	init_queue(t_queue *queue)
@@ -68,6 +70,7 @@ int	init_coder(t_all *all, int nb_coders, int i)
 	all->coders[i].left = &all->dongles[(i - 1 + nb_coders) % nb_coders];
 	all->coders[i].right = &all->dongles[i];
 	all->coders[i].all = all;
+	all->coders[i].malloc_error = 0;
 	pthread_mutex_unlock(&all->mutex);
 	pthread_mutex_init(&all->coders[i].mutex, NULL);
 	pthread_create(&thread, NULL, threading, &all->coders[i]);
@@ -81,10 +84,10 @@ int	init_all_coders(t_all *all)
 	int	nb_coders;
 
 	nb_coders = all->args.nb_coders;
-	i = 0;
 	all->coders = malloc(sizeof(t_coder) * nb_coders);
 	if (!all->coders)
-		return (1);
+		return (0);
+	i = 0;
 	all->active = 1;
 	all->ready_count = 0;
 	all->go = 0;

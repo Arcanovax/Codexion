@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 14:53:40 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/17 12:03:35 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/18 09:08:10 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	queue_append(t_queue *queue, t_coder *coder)
 
 	new = malloc(sizeof(t_node));
 	if (!new)
-		return (1);
+		return (0);
 	new->coder = coder;
 	new->next = NULL;
 	pthread_mutex_lock(&queue->mutex);
@@ -33,7 +33,7 @@ int	queue_append(t_queue *queue, t_coder *coder)
 		queue->tail = new;
 	}
 	pthread_mutex_unlock(&queue->mutex);
-	return (0);
+	return (1);
 }
 
 int	queue_remove(t_queue *queue, t_coder *coder)
@@ -174,8 +174,7 @@ int	has_priority(t_all *all, t_coder *coder)
 	{
 		return (0);
 	}
-
 	return (1);
 }
 
-
+// decaler has prio

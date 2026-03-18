@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 15:29:05 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/16 15:22:30 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/18 09:01:20 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ typedef struct s_coder
 	int				nb_compile;
 	int				in_queue;
 	int long		last_compile;
+	int				malloc_error;
 }	t_coder;
 
 typedef struct s_node

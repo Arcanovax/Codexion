@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 15:02:07 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/16 12:56:17 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/17 15:48:55 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	main(int argc, char **argv)
 	if (argc != 9)
 	{
 		printf("Number of arguments invalid\n");
-		return (1);
+		return (0);
 	}
 	if (!check_args(argv + 1))
 		return (0);
@@ -102,9 +102,20 @@ int	main(int argc, char **argv)
 	printf("number_of_compiles_required %i\n", all.args.nb_compiles);
 	printf("dongle_cooldown %i\n", all.args.dongle_cooldown);
 	printf("scheduler  %u\n", all.args.scheduler);
-	init_dongles(&all);
+
+
 	init_queue(&all.queue);
-	init_monitor(&all);
+	if(!init_dongles(&all))
+	{
+		free(all.dongles);
+		return (0);
+	}
+	if(!init_monitor(&all))
+	{
+		free_all(&all);
+		return (0);
+	}
 	free_all(&all);
-	return (0);
+
+	return (1);
 }

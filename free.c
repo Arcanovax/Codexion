@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/16 12:32:43 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/16 12:54:25 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/17 13:47:18 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,10 @@ void	free_queue(t_all *all)
 
 void	free_all(t_all *all)
 {
-	free(all->coders);
-	free(all->dongles);
-	free_queue(all);
+	if (all->coders)
+		free(all->coders);
+	if (all->dongles)
+		free(all->dongles);
+	if (all->queue.head)
+		free_queue(all);
 }

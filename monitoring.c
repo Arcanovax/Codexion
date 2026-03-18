@@ -6,15 +6,15 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 14:19:08 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/16 12:54:51 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/18 09:02:36 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-int all_done(t_all *all)
+int	all_done(t_all *all)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < all->args.nb_coders)
@@ -59,6 +59,25 @@ int one_burn(t_all *all)
 	return (0);
 }
 
+int	one_fail(t_all *all)
+{
+	int	i;
+
+	i = 0;
+	while (i < all->args.nb_coders)
+	{
+		pthread_mutex_lock(&all->coders[i].mutex);
+		if (all->coders[i].malloc_error)
+		{
+			pthread_mutex_unlock(&all->coders[i].mutex);
+			return (0);
+		}
+		pthread_mutex_unlock(&all->coders[i].mutex);
+		i++;
+	}
+	return (1);
+}
+
 void* monitoring(void* arg)
 {
 	t_all *all;
@@ -69,13 +88,7 @@ void* monitoring(void* arg)
 	while (1)
 	{
 		pthread_mutex_lock(&all->mutex);
-		if (all_done(all))
-		{
-			all->active = 0;
-			pthread_mutex_unlock(&all->mutex);
-			break;
-		}
-		if (one_burn(all))
+		if (all_done(all) || one_burn(all) || one_fail(all))
 		{
 			all->active = 0;
 			pthread_mutex_unlock(&all->mutex);
