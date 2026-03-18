@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 15:47:24 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/18 09:02:05 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/18 11:06:21 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,8 @@ void	*threading(void *arg)
 		pthread_mutex_lock(&coder->mutex);
 		in_queue = coder->in_queue;
 		pthread_mutex_unlock(&coder->mutex);
+		if (coder->left == coder->right)
+			continue ;
 		if (in_queue && !has_priority(coder->all, coder))
 			continue ;
 		if (coder->left < coder->right)
@@ -132,7 +134,11 @@ void	*threading(void *arg)
 			pthread_mutex_unlock(&coder->mutex);
 			routine(coder);
 			if (!queue_append(&coder->all->queue, coder))
-    			coder->malloc_error = 1;
+			{
+				pthread_mutex_lock(&coder->mutex);
+				coder->malloc_error = 1;
+				pthread_mutex_unlock(&coder->mutex);
+			}
 		}
 		else
 		{

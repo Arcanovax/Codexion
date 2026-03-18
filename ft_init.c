@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 15:47:24 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/18 09:01:48 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/18 10:43:20 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ int	init_monitor(t_all *all)
 {
 	struct timeval	start;
 
-
 	if (!init_all_coders(all))
 		return (0);
 	pthread_mutex_lock(&all->start_mutex);
@@ -47,15 +46,6 @@ int	init_monitor(t_all *all)
 	pthread_create(&all->monitor.thread, NULL, monitoring, all);
 	pthread_join(all->monitor.thread, NULL);
 	return (1);
-}
-
-int	init_queue(t_queue *queue)
-{
-	queue->head = NULL;
-	queue->tail = NULL;
-	if (pthread_mutex_init(&queue->mutex, NULL))
-		return (1);
-	return (0);
 }
 
 int	init_coder(t_all *all, int nb_coders, int i)

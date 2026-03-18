@@ -4,14 +4,15 @@ CC = cc
 CFLAGS += -Werror -Wextra -Wall -pthread -MMD -MP -g3
 
 SRCS = \
-	codexion.c	\
-	ft_init.c	\
-	time.c		\
-	dongles.c	\
-	coders.c	\
-	monitoring.c\
-	queue.c		\
-	free.c
+	codexion.c		\
+	ft_init.c		\
+	time.c			\
+	dongles.c		\
+	coders.c		\
+	monitoring.c	\
+	queue.c			\
+	free.c			\
+	queue_manager.c
 
 OBJDIR = .obj
 

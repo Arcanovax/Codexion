@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 15:02:07 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/17 15:48:55 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/18 11:12:13 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,27 +95,17 @@ int	main(int argc, char **argv)
 	if (!check_args(argv + 1))
 		return (0);
 	get_args(&all, argv + 1);
-	printf("number_of_coders %i\n", all.args.nb_coders);
-	printf("time_to_burnout %i\n", all.args.tm_burnout);
-	printf("time_to_compile %i\n", all.args.tm_compile);
-	printf("time_to_refactor %i\n", all.args.tm_refactor);
-	printf("number_of_compiles_required %i\n", all.args.nb_compiles);
-	printf("dongle_cooldown %i\n", all.args.dongle_cooldown);
-	printf("scheduler  %u\n", all.args.scheduler);
-
-
 	init_queue(&all.queue);
-	if(!init_dongles(&all))
+	if (!init_dongles(&all))
 	{
 		free(all.dongles);
 		return (0);
 	}
-	if(!init_monitor(&all))
+	if (!init_monitor(&all))
 	{
 		free_all(&all);
 		return (0);
 	}
 	free_all(&all);
-
 	return (1);
 }
