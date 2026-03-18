@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 14:19:08 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/18 09:02:36 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/18 10:04:03 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,12 +70,12 @@ int	one_fail(t_all *all)
 		if (all->coders[i].malloc_error)
 		{
 			pthread_mutex_unlock(&all->coders[i].mutex);
-			return (0);
+			return (1);
 		}
 		pthread_mutex_unlock(&all->coders[i].mutex);
 		i++;
 	}
-	return (1);
+	return (0);
 }
 
 void* monitoring(void* arg)
