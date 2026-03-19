@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 15:29:05 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/18 09:01:20 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/19 13:33:51 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,18 @@ typedef struct s_dongle
 
 }	t_dongle;
 
+typedef struct s_mutex_init
+{
+	int	queue;
+	int	dongles;
+	int	monitor;
+	int	coders;
+	int	all;
+	int	start;
+	int	printf;
+
+}	t_mutex_init;
+
 typedef struct s_coder
 {
 	int				id;
@@ -96,12 +108,14 @@ typedef struct s_all
 	pthread_mutex_t	printf;
 	t_monitor		monitor;
 	t_queue			queue;
+	t_mutex_init	track;
 }	t_all;
 
 int			init_all_coders(t_all *args);
 int			init_dongles(t_all *all);
+int			init_mutex_track(t_all *all);
 long int	get_time(t_all *all);
-int			init_queue(t_queue *queue);
+int			init_queue(t_all *all);
 int			queue_append(t_queue *queue, t_coder *coder);
 int			queue_remove(t_queue *queue, t_coder *coder);
 int			has_priority(t_all *all, t_coder *coder);
@@ -113,11 +127,17 @@ int			init_monitor(t_all *all);
 int			leave_dongles(t_coder *coder);
 void		*monitoring(void *arg);
 void		*threading(void *arg);
-int			init_queue(t_queue *queue);
 int			queue_append(t_queue *queue, t_coder *coder);
 int			has_priority(t_all *all, t_coder *coder);
 int			queue_remove(t_queue *queue, t_coder *coder);
-int			init_queue(t_queue *queue);
 void		print_msg(char *msg, t_coder *coder);
 void		free_all(t_all *all);
+int			is_active(t_coder *coder);
+void		lock_left_right(t_coder *coder);
+int			can_use_dongles(t_coder *coder, long now);
+int			wait_go(t_all *all);
+void		try_use_dongles(t_coder *coder);
+int			routine(t_coder *coder);
+void		destroy_mutex(t_all *all);
+int			create_monitor_mutex(t_all *all);
 #endif

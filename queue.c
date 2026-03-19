@@ -6,19 +6,20 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 14:53:40 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/18 11:08:00 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/19 12:45:49 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-int	init_queue(t_queue *queue)
+int	init_queue(t_all *all)
 {
-	queue->head = NULL;
-	queue->tail = NULL;
-	if (pthread_mutex_init(&queue->mutex, NULL))
-		return (1);
-	return (0);
+	all->queue.head = NULL;
+	all->queue.tail = NULL;
+	if (pthread_mutex_init(&all->queue.mutex, NULL))
+		return (0);
+	all->track.queue = 1;
+	return (1);
 }
 
 int	queue_append(t_queue *queue, t_coder *coder)

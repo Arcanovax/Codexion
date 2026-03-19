@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 14:19:08 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/18 11:03:04 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/19 13:34:05 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,24 @@ int	one_fail(t_all *all)
 	return (0);
 }
 
+int	create_monitor_mutex(t_all *all)
+{
+	if (pthread_mutex_init(&all->mutex, NULL))
+		return (0);
+	all->track.all = 1;
+	if (pthread_mutex_init(&all->start_mutex, NULL))
+		return (0);
+	all->track.start = 1;
+	if (pthread_mutex_init(&all->printf, NULL))
+		return (0);
+	all->track.printf = 1;
+	return (1);
+}
+
 void	*monitoring(void *arg)
 {
 	t_all	*all;
-	int		i;
 
-	i = 0;
 	all = (t_all *)arg;
 	while (1)
 	{
@@ -92,11 +104,6 @@ void	*monitoring(void *arg)
 		}
 		pthread_mutex_unlock(&all->mutex);
 		usleep(1);
-	}
-	while (i < all->args.nb_coders)
-	{
-		pthread_join(all->coders[i].thread_id, NULL);
-		i++;
 	}
 	return (NULL);
 }

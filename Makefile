@@ -1,7 +1,6 @@
 NAME = codexion
-
 CC = cc
-CFLAGS += -Werror -Wextra -Wall -pthread -MMD -MP -g3
+CFLAGS += -Werror -Wextra -Wall -pthread -MMD -MP
 
 SRCS = \
 	codexion.c		\
@@ -11,8 +10,9 @@ SRCS = \
 	coders.c		\
 	monitoring.c	\
 	queue.c			\
-	free.c			\
-	queue_manager.c
+	exit.c			\
+	queue_manager.c \
+	thread_utils.c
 
 OBJDIR = .obj
 
