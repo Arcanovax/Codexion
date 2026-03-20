@@ -6,7 +6,7 @@
 /*   By: mthetcha <mthetcha@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 15:29:05 by mthetcha          #+#    #+#             */
-/*   Updated: 2026/03/19 13:33:51 by mthetcha         ###   ########lyon.fr   */
+/*   Updated: 2026/03/20 11:09:27 by mthetcha         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,30 +114,28 @@ typedef struct s_all
 int			init_all_coders(t_all *args);
 int			init_dongles(t_all *all);
 int			init_mutex_track(t_all *all);
-long int	get_time(t_all *all);
 int			init_queue(t_all *all);
-int			queue_append(t_queue *queue, t_coder *coder);
-int			queue_remove(t_queue *queue, t_coder *coder);
-int			has_priority(t_all *all, t_coder *coder);
+int			init_monitor(t_all *all);
 int			take_dongles(t_coder *coder);
 int			leave_dongles(t_coder *coder);
-void		*monitoring(void *arg);
+void		try_use_dongles(t_coder *coder);
+int			can_use_dongles(t_coder *coder, long now);
+int			queue_append(t_queue *queue, t_coder *coder);
+int			queue_remove(t_queue *queue, t_coder *coder);
+int			queue_append(t_queue *queue, t_coder *coder);
+int			queue_remove(t_queue *queue, t_coder *coder);
+int			has_priority(t_all *all, t_coder *coder);
 void		ft_sleep(long long sleep_time, t_all *all);
-int			init_monitor(t_all *all);
-int			leave_dongles(t_coder *coder);
+long int	get_time(t_all *all);
 void		*monitoring(void *arg);
 void		*threading(void *arg);
-int			queue_append(t_queue *queue, t_coder *coder);
+int			routine(t_coder *coder);
 int			has_priority(t_all *all, t_coder *coder);
-int			queue_remove(t_queue *queue, t_coder *coder);
+void		lock_left_right(t_coder *coder);
 void		print_msg(char *msg, t_coder *coder);
 void		free_all(t_all *all);
 int			is_active(t_coder *coder);
-void		lock_left_right(t_coder *coder);
-int			can_use_dongles(t_coder *coder, long now);
 int			wait_go(t_all *all);
-void		try_use_dongles(t_coder *coder);
-int			routine(t_coder *coder);
 void		destroy_mutex(t_all *all);
 int			create_monitor_mutex(t_all *all);
 #endif
